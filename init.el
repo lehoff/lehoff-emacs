@@ -100,21 +100,168 @@
 
 ;;; package.el configuration
 ;; temp
-(add-to-list 'load-path "/Users/th/.emacs.d")
+;; (add-to-list 'load-path "/Users/th/.emacs.d")
+;; (add-to-list 'load-path "/Users/th/.emacs.d/elpa/erlang-2.4.1")
+(let ((default-directory "/Users/th/.emacs.d/elpa/"))
+  (normal-top-level-add-subdirs-to-load-path))
+;;; the manual dir contains packages that could not be installed using
+;;; the Emacs package manager.  The manual/initialise.sh script clones
+;;; the ones that are on public repos. Sholud there be other with more
+;;; manual installation procedures they will be stated here.
+;; (let ((default-directory "/Users/th/.emacs.d/manual/"))
+;;   (normal-top-level-add-subdirs-to-load-path))
 (require 'package)
+
+(dolist (arch '(("org" . "http://orgmode.org/elpa/")
+                ("gnu" . "http://elpa.gnu.org/packages/")
+                ("melpa" . "http://melpa.milkbox.net/packages/")
+                ("tromey" . "http://tromey.com/elpa/")
+                ("marmalade" . "http://marmalade-repo.org/packages/")
+                ))
+  (add-to-list 'package-archives arch))
 (package-initialize)
 
-(add-to-list 'package-archives '("ELPA" . "http://tromey.com/elpa/"))
-(add-to-list 'package-archives
-             '("marmalade" . "http://marmalade-repo.org/packages/"))
-(add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/"))
 
 
 
+;;; customisations
 (if (string-equal "darwin" (symbol-name system-type))
   (progn
     (set-frame-font "Menlo-11")))
 
 (load-theme 'manoj-dark)
 
+
+;; setting up the configs dir
+(setq emacs-config-dir (file-name-directory
+                        (or (buffer-file-name) load-file-name)))
+
+(setq custom-file (concat emacs-config-dir "custom.el"))
+(setq package-user-dir (concat emacs-config-dir "elpa"))
+(setq abbrev-file-name (concat emacs-config-dir "abbrev_defs"))
+(defconst *emacs-config-dir* (concat emacs-config-dir "/configs/" ""))
+
+(add-to-list 'load-path emacs-config-dir)
+
+
+;;; el-get configuration
+(add-to-list 'load-path (concat emacs-config-dir "/el-get/el-get"))
+
+(unless (require 'el-get nil t)
+  (with-current-buffer
+      (url-retrieve-synchronously
+       "https://raw.github.com/dimitri/el-get/master/el-get-install.el")
+    (end-of-buffer)
+    (eval-print-last-sexp)))
+
+(add-to-list 'el-get-recipe-path "~/.emacs.d/el-get/el-get/recipes/")
+
+(setq el-get-user-package-directory
+      (concat user-emacs-directory "/configs"))
+
+
+
+
+;; Now, set up some el-get-sources overrides for our programs
+(setq el-get-sources
+ '((:name el-get
+    :type git
+    :url "git://github.com/dimitri/el-get.git"
+    :features el-get
+    :compile "el-get.el")
+   (:name erlang-emacs
+	  :type git
+	  :url "git@github.com:lehoff/erlang-emacs.git"
+	  :features erlang-start)
+   (:name elixir-mix
+    :type elpa)
+   ;; (:name elixir-yasnippets
+			 ;;        :type elpa)
+   (:name flymake-elixir
+    :type elpa)
+   (:name ruby-end-mode
+	  :type git
+	  :url "git@github.com:rejeep/ruby-end.git")
+   (:name magit
+	  :type elpa)
+   (:name distel
+	  :website "https://github.com/massemanet/distel"
+	  :description "Distributed Emacs Lisp for Erlang."
+	  :type github
+	  :pkgname "massemanet/distel"
+	  :info "doc"
+	  :build `,(mapcar
+							(lambda (target)
+							 (concat "make " target " EMACS=" el-get-emacs))
+							'("clean" "all"))
+	  :load-path ("elisp")
+       :features distel)
+   ;; (:name magithub
+   ;;        :after (progn
+   ;;                 (global-set-key (kbd "C-c g") 'magit-status))
+   ;; 	  )
+   ))
+
+;; Set up the packages that we are using
+(setq my-packages
+      (append
+       '(
+         auctex
+         el-get
+         idle-highlight-mode
+         fuzzy
+         popup
+         auto-complete
+         auto-complete-latex
+         csv-mode
+         dig
+	       distel
+         undo-tree
+         expand-region
+         erlang-emacs
+	       elixir 
+         elixir-mix
+	       ruby-end-mode
+         graphviz-dot-mode
+         htmlize
+         json js2-mode
+         markdown-mode
+         magit
+         org-mode
+         ;;sml-mode
+         ssh-config
+         )
+       (if (string-equal "darwin" (symbol-name system-type))
+         '(growl)
+         '())
+       (mapcar 'el-get-source-name el-get-sources)))
+
+;; Install all the packages
+(el-get 'sync my-packages)
+;; This is worth setting the first time you run, to wait on
+;; the sync to complete
+(el-get 'wait)
+
+;; A function to load config files
+(defun load-config-files (files)
+  (dolist (f files)
+    (load (expand-file-name
+           (concat *emacs-config-dir* f)))
+    (message "Loaded config file: %s" file)))
+
+
+(load-config-files '("defuns"
+		     "global"
+         "init-auto-complete"
+		     "init-auctex"
+		     "init-erlang"
+		     "init-hippie-expand"
+		     "init-org-mode"
+		     "init-flymake"
+;;		     "init-elixir"
+		     ))
+
+;; Get our custom configuration loaded
+(load custom-file 'noerror)
+;;; init.el ends here
 (server-start)
