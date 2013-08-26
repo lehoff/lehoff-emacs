@@ -8,7 +8,8 @@
 
 ;; init.el --- Initialization file for my Emacs setup
 ;;; Commentary:
-(when (eq system-type 'darwin) ;; mac specific settings
+ ;; mac specific settings
+(when (eq system-type 'darwin)
   (setq mac-option-modifier 'none))	
 ;(setq mac-command-modifier 'meta
 ;      mac-option-modifier 'none
@@ -26,6 +27,15 @@
 
 (global-visual-line-mode 1)
 (delete-selection-mode 1)
+
+; Load CEDET.
+;; See cedet/common/cedet.info for configuration details.
+;; IMPORTANT: Tou must place this *before* any CEDET component (including
+;; EIEIO) gets activated by another package (Gnus, auth-source, ...).
+;;(load-file "~/.emacs.d/el-get/cedet/cedet-devel-load.el")
+
+
+
 
 (setq ispell-auto-detect-encoding nil)
 (setq-default ispell-program-name "aspell")
@@ -178,11 +188,13 @@
    ;; (:name elixir-yasnippets
 			 ;;        :type elpa)
    (:name flymake-elixir
-    :type elpa)
+	  :type elpa)
    (:name ruby-end-mode
 	  :type git
 	  :url "git@github.com:rejeep/ruby-end.git")
    (:name magit
+	  :type elpa)
+   (:name exec-path-from-shell
 	  :type elpa)
    (:name distel
 	  :website "https://github.com/massemanet/distel"
@@ -191,9 +203,9 @@
 	  :pkgname "massemanet/distel"
 	  :info "doc"
 	  :build `,(mapcar
-							(lambda (target)
-							 (concat "make " target " EMACS=" el-get-emacs))
-							'("clean" "all"))
+		    (lambda (target)
+		      (concat "make " target " EMACS=" el-get-emacs))
+		    '("clean" "all"))
 	  :load-path ("elisp")
        :features distel)
    ;; (:name magithub
@@ -217,6 +229,7 @@
          dig
 	       distel
          undo-tree
+	 exec-path-from-shell
          expand-region
          erlang-emacs
 	       elixir 
@@ -228,6 +241,7 @@
          markdown-mode
          magit
          org-mode
+;;         cedet
          ;;sml-mode
          ssh-config
          )
@@ -252,14 +266,19 @@
 
 (load-config-files '("defuns"
 		     "global"
-         "init-auto-complete"
+;;                     "init-tags"
+;;                     "init-semantic"
+                     "init-auto-complete"
 		     "init-auctex"
 		     "init-erlang"
 		     "init-hippie-expand"
 		     "init-org-mode"
 		     "init-flymake"
-;;		     "init-elixir"
+		     "init-elixir"
 		     ))
+
+(when (eq system-type 'darwin)
+  (exec-path-from-shell-initialize))
 
 ;; Get our custom configuration loaded
 (load custom-file 'noerror)
