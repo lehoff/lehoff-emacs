@@ -16,3 +16,5 @@ session.*
 /bookmarks
 /eshell/history
 /eshell/lastdir
+tmp/*
+ac-comphist.dat
