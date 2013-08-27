@@ -49,6 +49,15 @@
 (setq ido-max-directory-size 100000)
 (ido-mode (quote both))
 
+(setq org-agenda-files (quote ("~/org")))
+(setq org-clock-in-resume t)
+(setq org-clock-persist t)
+(setq org-clock-report-include-clocking-task t)
+(setq org-log-done (quote note))
+(setq org-modules (quote (org-bbdb org-bibtex org-docview org-gnus org-info org-jsinfo org-irc org-mac-message org-mew org-mhe org-rmail org-vm org-wl org-w3m org-mac-link-grabber)))
+(setq org-refile-use-outline-path nil)
+(setq org-support-shift-select t)
+
 ;;; hack to get rid of sub-tree but keep node.
 (defun lehoff/org-archive-subtree-keep-node ()
   (interactive)

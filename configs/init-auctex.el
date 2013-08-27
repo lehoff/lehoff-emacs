@@ -11,6 +11,8 @@
 
 (add-hook 'LaTeX-mode-hook
           'turn-on-auto-fill)
+(add-hook 'LaTeX-mode-hook
+	  'ac-l-setup)
 (add-hook 'tex-mode-hook
           'turn-on-auto-fill)
 (add-hook 'text-mode-hook

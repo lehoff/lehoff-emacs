@@ -156,6 +156,9 @@
 
 ;;; el-get configuration
 (add-to-list 'load-path (concat emacs-config-dir "/el-get/el-get"))
+(let ((default-directory "/Users/th/.emacs.d/el-get"))
+  (normal-top-level-add-subdirs-to-load-path))
+
 
 (unless (require 'el-get nil t)
   (with-current-buffer
