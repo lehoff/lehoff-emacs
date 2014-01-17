@@ -10,8 +10,8 @@
 
 
 (require 'erlang-start)
-(require 'distel)
-(distel-setup)
+;; (require 'distel)
+;; (distel-setup)
 
 ;; Wrangler
 
@@ -54,3 +54,10 @@
         ;;  (root       . "~/src/other_stuff")
         ;;  (node-sname . "not_as_awesome")
         ;;  (lib-dirs   . ("lib" "test")))))
+
+(defun insert-erl-emacs-vars ()
+  "Insert the right local variables."
+  (interactive)
+  (insert "%%% Local Variables:\n")
+  (insert "%%% erlang-indent-level: 2\n")
+  (insert "%%% End:"))

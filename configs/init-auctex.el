@@ -11,8 +11,8 @@
 
 (add-hook 'LaTeX-mode-hook
           'turn-on-auto-fill)
-(add-hook 'LaTeX-mode-hook
-	  'ac-l-setup)
+;;(add-hook 'LaTeX-mode-hook
+;;	  'ac-l-setup)
 (add-hook 'tex-mode-hook
           'turn-on-auto-fill)
 (add-hook 'text-mode-hook
@@ -54,4 +54,58 @@
 (setq TeX-view-program-list
      '(("PDF Viewer" "/Applications/Skim.app/Contents/SharedSupport/displayline -b -g %n %o %b")))
 (setq TeX-source-correlate-start-server t)
+
+(defun lehoff/bind-latex-next-error ()
+  "Bind <f5> to next error"
+  (local-set-key (kbd "<f5>") 'TeX-next-error)
+  (local-set-key (kbd "S-<f5>") 'TeX-previous-error))
+
+(add-hook 'LaTeX-mode-hook 'lehoff/bind-latex-next-error)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

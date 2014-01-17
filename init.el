@@ -1,10 +1,39 @@
 ;; EQC Emacs Mode -- Configuration Start
-(add-to-list 'load-path "/Users/th/Library/Erlang/lib/eqc-1.27.1/emacs/")
+(add-to-list 'load-path "/Users/th/Library/Erlang/lib/eqc-1.29.1/emacs/")
 (autoload 'eqc-erlang-mode-hook "eqc-ext" "EQC Mode" t)
 (add-hook 'erlang-mode-hook 'eqc-erlang-mode-hook)
 (setq eqc-max-menu-length 30)
-(setq eqc-root-dir "/Users/th/Library/Erlang/lib/eqc-1.27.1")
+(setq eqc-root-dir "/Users/th/Library/Erlang/lib/eqc-1.29.1")
 ;; EQC Emacs Mode -- Configuration End
+
+;; (setq message-default-charset 'utf-8)
+;; (set-language-environment 'utf-8)
+;; (prefer-coding-system 'utf-8)
+;; (set-charset-priority 'unicode)
+
+
+;; (setq default-sendmail-coding-system 'utf-8)
+;; (set-locale-environment "en_GB.UTF-8")
+;; (setq default-process-coding-system '(utf-8 . utf-8))
+;; (setq buffer-file-coding-system 'utf-8)
+;; (set-language-environment 'utf-8)
+;; (set-keyboard-coding-system 'utf-8)
+;; (setq locale-coding-system 'utf-8)
+;; (prefer-coding-system 'utf-8)
+;; (set-default-coding-systems 'utf-8)
+;; (set-terminal-coding-system 'utf-8)
+;; (set-keyboard-coding-system 'utf-8)
+(setq coding-system-for-read 'utf-8)
+(setq coding-system-for-write 'utf-8)
+
+;; backwards compatibility as default-buffer-file-coding-system
+;; is deprecated in 23.2.
+(if (boundp 'buffer-file-coding-system)
+    (setq-default buffer-file-coding-system 'utf-8)
+  (setq default-buffer-file-coding-system 'utf-8))
+ 
+;; Treat clipboard input as UTF-8 string first; compound text next, etc.
+(setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING))
 
 ;; init.el --- Initialization file for my Emacs setup
 ;;; Commentary:
@@ -25,6 +54,10 @@
 ;(global-set-key [f19] 'meta)
 ;(define-key function-key-map (kbd "f19") 'event-apply-meta-modifier)
 
+(global-set-key [f4] 'mu4e-update-mail-and-index)
+(global-set-key [C-f4] 'smtpmail-send-queued-mail)
+(global-set-key [f5] 'mu4e)
+;;(global-set-key [C-f5] (ido-switch-buffer (get-buffer "*mu4e-headers*")))
 (global-visual-line-mode 1)
 (delete-selection-mode 1)
 
@@ -92,7 +125,15 @@
           (add-to-list 'default-frame-alist '(left   . 0))
           (add-to-list 'default-frame-alist '(top    . 0))
           (add-to-list 'default-frame-alist '(height . 50))
-          (add-to-list 'default-frame-alist '(width  . 100))))
+          (add-to-list 'default-frame-alist '(width  . 120))))
+
+;; from http://stackoverflow.com/questions/92971/how-do-i-set-the-size-of-emacs-window
+(setq default-frame-alist
+      '((top . 20) (left . 200)
+        (width . 120) (height . 50)
+        (font . "Menlo-11")))
+        
+
 
 
 (setq disabled-command-function nil)
@@ -151,7 +192,7 @@
 (setq abbrev-file-name (concat emacs-config-dir "abbrev_defs"))
 (defconst *emacs-config-dir* (concat emacs-config-dir "/configs/" ""))
 
-(add-to-list 'load-path emacs-config-dir)
+(add-to-list 'load-path (concat emacs-config-dir "/el-get"))
 
 
 ;;; el-get configuration
@@ -186,17 +227,31 @@
 	  :type git
 	  :url "git@github.com:lehoff/erlang-emacs.git"
 	  :features erlang-start)
-   (:name elixir-mix
-    :type elpa)
+;;   (:name elixir-mix
+;;    :type elpa)
    ;; (:name elixir-yasnippets
 			 ;;        :type elpa)
    (:name flymake-elixir
-	  :type elpa)
+	  :type git
+	  :url "git@github.com:syl20bnr/flymake-elixir.git")
    (:name ruby-end-mode
 	  :type git
 	  :url "git@github.com:rejeep/ruby-end.git")
    (:name magit
-	  :type elpa)
+          :website "https://github.com/magit/magit#readme"
+          :description "It's Magit! An Emacs mode for Git."
+          :type github
+          :pkgname "magit/magit"
+          :depends (cl-lib git-modes)
+          :info "."
+          ;; let el-get care about autoloads so that it works with all OSes
+          :build (if (version<= "24.3" emacs-version)
+                     `(("make" ,(format "EMACS=%s" el-get-emacs) "all"))
+                   `(("make" ,(format "EMACS=%s" el-get-emacs) "docs")))
+          :build/berkeley-unix (("touch" "`find . -name Makefile`") ("gmake")))
+;;  (:name egg
+;;          :type git
+;;	  :url "git@github.com:byplayer/egg.git")
    (:name exec-path-from-shell
 	  :type elpa)
    (:name distel
@@ -227,22 +282,23 @@
          fuzzy
          popup
          auto-complete
-         auto-complete-latex
-         csv-mode
+;;         auto-complete-latex
+;;         csv-mode
          dig
-	       distel
+	 distel
          undo-tree
-	 exec-path-from-shell
+;;	 exec-path-from-shell
          expand-region
          erlang-emacs
-	       elixir 
+	 elixir 
          elixir-mix
-	       ruby-end-mode
+	 ruby-end-mode
          graphviz-dot-mode
          htmlize
          json js2-mode
          markdown-mode
          magit
+;;         egg
          org-mode
 ;;         cedet
          ;;sml-mode
@@ -257,7 +313,7 @@
 (el-get 'sync my-packages)
 ;; This is worth setting the first time you run, to wait on
 ;; the sync to complete
-(el-get 'wait)
+;; (el-get 'wait)
 
 ;; A function to load config files
 (defun load-config-files (files)
@@ -267,7 +323,8 @@
     (message "Loaded config file: %s" file)))
 
 
-(load-config-files '("defuns"
+(load-config-files 
+       '("defuns"
 		     "global"
 ;;                     "init-tags"
 ;;                     "init-semantic"
@@ -278,6 +335,7 @@
 		     "init-org-mode"
 		     "init-flymake"
 		     "init-elixir"
+                     "init-mu4e"
 		     ))
 
 (when (eq system-type 'darwin)

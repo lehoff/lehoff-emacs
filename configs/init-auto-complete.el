@@ -5,13 +5,13 @@
 
 (require 'auto-complete)
 (require 'auto-complete-config)
-(require 'auto-complete-latex)
+;;(require 'auto-complete-latex)
 (ac-config-default)
 (ac-flyspell-workaround)
 (add-to-list 'ac-dictionary-directories (concat emacs-config-dir "auto-complete/dict"))
 (setq ac-comphist-file (concat emacs-config-dir "tmp/ac-comphist.dat"))
 
-(setq ac-l-dict-directory (concat emacs-config-dir "el-get/auto-complete-latex/ac-l-dict/"))
+;;(setq ac-l-dict-directory (concat emacs-config-dir "el-get/auto-complete-latex/ac-l-dict/"))
 
 (global-auto-complete-mode t)
 (setq ac-auto-show-menu t)
