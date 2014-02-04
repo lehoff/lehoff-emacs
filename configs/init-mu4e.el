@@ -218,7 +218,12 @@
         "Print the message using muttprint."
         (mu4e-view-pipe "muttprint -p Virtual_PDF_Printer")))) 
 
-
+;; compose hook from manual §6.4
+(add-hook 'mu4e-compose-mode-hook
+          (defun my-do-compose-stuff ()
+            "My settings for message composition."
+            (set-fill-column 85)
+            (flyspell-mode)))
 
 
 

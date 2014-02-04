@@ -24,6 +24,7 @@
 
 (add-hook 'erlang-mode-hook 'esk-prog-mode-hook)
 
+(setq erlang-indent-level 2)
 
 ;; Align (thanks @eproxus)
 (add-hook 'align-load-hook

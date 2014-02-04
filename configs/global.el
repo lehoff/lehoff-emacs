@@ -67,6 +67,7 @@
 (setq-default x-select-enable-clipboard t)
 (setq-default oddmuse-directory (concat emacs-config-dir "oddmuse"))
 (setq-default xterm-mouse-mode t)
+(setq-default fill-column 85)
 
 (setf split-height-threshold 40
       split-width-threshold 160)

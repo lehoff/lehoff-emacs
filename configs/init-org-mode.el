@@ -1,6 +1,7 @@
 (require 'org-install)
 (add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
 
+(require 'org-mac-link)
 (setq org-default-notes-file "~/org/notes.org")
 (setq org-capture-templates
       '(("t" "Task" entry (file+headline "~/org/notes.org" "Tasks")
@@ -24,7 +25,7 @@
 (global-set-key "\C-cb" 'org-iswitchb)
 
 (add-hook 'org-mode-hook (lambda () 
-  (define-key org-mode-map (kbd "C-c C-g") 'omlg-grab-link)))
+  (define-key org-mode-map (kbd "C-c C-g") 'org-mac-grab-link)))
 
 (setq org-capture-templates
       '(("t" "Todo" entry (file+headline "~/org/refile.org" "Tasks")
@@ -71,3 +72,12 @@
 (global-set-key (kbd "<f7>") 'org-save-all-org-buffers)
 (global-set-key (kbd "<f6>") 'org-clock-in)
 (global-set-key (kbd "C-<f6>") 'org-clock-out)
+
+
+;;; MobileOrg set-up
+;; Set to the location of your Org files on your local system
+(setq org-directory "~/org")
+;; Set to the name of the file where new notes will be stored
+(setq org-mobile-inbox-for-pull "~/org/refile.org")
+;; Set to <your Dropbox root directory>/MobileOrg.
+(setq org-mobile-directory "~/Dropbox/Apps/MobileOrg")

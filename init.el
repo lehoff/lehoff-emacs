@@ -254,6 +254,13 @@
 ;;	  :url "git@github.com:byplayer/egg.git")
    (:name exec-path-from-shell
 	  :type elpa)
+   (:name mac-grab-link
+       :description
+       "Download the mac-grab-link.el file."
+       :type http
+       :url "http://orgmode.org/w/?p=org-mode.git;a=blob_plain;f=contrib/lisp/org-mac-link.el"
+       )
+  
    (:name distel
 	  :website "https://github.com/massemanet/distel"
 	  :description "Distributed Emacs Lisp for Erlang."
@@ -336,6 +343,7 @@
 		     "init-flymake"
 		     "init-elixir"
                      "init-mu4e"
+         "init-markdown"
 		     ))
 
 (when (eq system-type 'darwin)
